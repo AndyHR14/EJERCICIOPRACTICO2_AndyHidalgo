@@ -29,9 +29,6 @@
                   <li class="nav-item" sec:authorize="hasRole('ROLE_USUARIO')">
                     <a class="nav-link" th:href="@{/reservas/listado}" style="color: white;">Reservas</a>
                 </li>
-                  <li class="nav-item"sec:authorize="hasRole('ROLE_USUARIO')">
-                    <a class="nav-link" th:href="@{/contacto}" style="color: white;">Contacto</a>
-                </li>
                   <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
                     <a class="nav-link" th:href="@{/usuario/listado}" style="color: white;">Usuarios</a>
                 </li>

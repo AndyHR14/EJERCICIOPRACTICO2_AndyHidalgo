@@ -65,8 +65,8 @@ CREATE TABLE reservas (
     id_usuario INT,
     id_funcion INT,
     cantidad INT,
-    FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario),
-    FOREIGN KEY (id_funcion) REFERENCES funcion(id_funcion)
+    FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario) ON DELETE CASCADE,
+    FOREIGN KEY (id_funcion) REFERENCES funcion(id_funcion) ON DELETE CASCADE
 );
 -- Insertar usuarios de ejemplo (admin tiene contraseña 123 y andy tiene contraseña 789)
 INSERT INTO usuario (username, password, nombre, apellidos, correo, activo) VALUES
