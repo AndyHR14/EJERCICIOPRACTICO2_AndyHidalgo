@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/199/xhtml">
+    <head th:replace="~{layout/plantilla :: head}">
+        <title>CineMark</title>
+    </head>
+    <body>
+         <header th:replace="~{layout/plantilla :: header}"/>
+
+    <section id="Iframe" style="text-align: center;">
+        <h2>¡Bienvenido a cinemark</h2>
+        <iframe width="640" height="360" src="https://www.youtube.com/embed/IQfIn0Ltqz8" title="¡Vive el cine a solo 5.90 en Cinemark Mall Aventura! 🎬✨" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        <h5>¡Aprovecha nuestros descuentos y mira tu pelicula favorita!</h5>
+    </section>
+
+         <footer th:replace="~{layout/plantilla :: footer}"/>
+    </body>
+</html>

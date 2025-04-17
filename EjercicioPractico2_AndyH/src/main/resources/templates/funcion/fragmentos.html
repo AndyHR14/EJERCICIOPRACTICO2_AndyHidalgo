@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <head th:replace="~{layout/plantilla :: head}">
+        <title>CineMark</title>
+        <meta charset="UTF-8"/>
+    </head>
+    <body>
+        <section th:fragment="botonesAgregar" class="py-4 mb-4 bg-light">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-3">
+                        <button
+                            type="button"
+                            sec:authorize="hasRole('ROLE_ADMIN')"
+                            class="btn btn-primary btn-block"
+                            data-bs-toggle="modal"
+                            data-bs-target="#agregarFuncion">
+                            <i class="fas fa-plus"></i> Agregar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section th:fragment="agregarFuncion">
+            <div id="agregarFuncion"
+                 class="modal fade"
+                 tabindex="-1"
+                 aria-labelledby="exampleModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-md">
+                    <div class="modal-content">
+                        <div class="modal-header bg-info text-white">
+                            <h5 class="modal-title">Agregar</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form th:action="@{/funcion/guardar}" th:object="${funcion}"
+                              method="POST" class="was-validated" enctype="multipart/form-data">
+
+                            <input type="hidden" name="nuevaImagen" value="NO"/>
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="idPelicula">Pelicula</label>
+                                    <select name="pelicula.idPelicula"
+                                            class="form-select"
+                                            aria-label="Default select example">
+                                        <option th:each="pelicula : ${peliculas}" th:value="${pelicula.idPelicula}" th:text="${pelicula.titulo}">
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="fecha">Fecha</label>
+                                    <input type="text" class="form-control" name="fecha" required="true"/>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="hora">Hora</label>
+                                    <input type="text" class="form-control" name="hora" required="true"/>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="sala">Sala</label>
+                                    <input type="text" class="form-control" name="sala" required="true"/>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="activo">activo</label>
+                                    <input class="form-check-input"
+                                           type="checkbox"
+                                           name="activo"
+                                           id="activo"/>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button class="btn btn-primary" type="submit">Guardar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section th:fragment="listadoFuncions" id="funcions">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>Funciones</h4>
+                            </div>
+                            <div th:if="${funcions != null and !funcions.empty}">
+                                <table class="table table-primary table-striped-columns">
+                                    <thead class="table-primary">
+                                        <tr><th>Id</th>
+                                            <th class="text-center">Pelicula</th>
+                                            <th class="text-center">Fecha</th>
+                                            <th class="text-center">Hora</th>
+                                            <th class="text-center">Sala</th>
+                                            <th class="text-center">Activo</th>
+                                            <th></th>
+                                            <th sec:authorize="hasRole('ROLE_ADMIN')"></th>
+                                            <th sec:authorize="hasRole('ROLE_ADMIN')"></th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="funcion, contador : ${funcions}">
+                                            <td class="text-center">[[${contador.count}]]</td>
+                                            <td class="fs-6">[[${funcion.pelicula.titulo}]]</td>
+                                            <td class="text-center">[[${funcion.fecha}]]</td>
+                                            <td class="text-center">[[${funcion.hora}]]</td>
+                                            <td class="text-center">[[${funcion.sala}]]</td>
+                                            <td class="text-center" th:text="${funcion.activo} ? 'Activa' : 'Inactiva'" />
+                                            <td>
+                                                </td>
+                                            <td sec:authorize="hasRole('ROLE_ADMIN')">
+                                                <a th:href="@{/funcion/eliminar/}+${funcion.idFuncion}"
+                                                   class="btn btn-danger">
+                                                    <i class="fas fa-trash"></i> Eliminar </a>
+                                            </td>
+                                            <td sec:authorize="hasRole('ROLE_ADMIN')">
+                                                <a th:href="@{/funcion/modificar/}+${funcion.idFuncion}"
+                                                   class="btn btn-success">
+                                                    <i class="fas fa-pencil"></i> Actualizar </a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                            <div class="text-center p-2" th:if="${funcions == null or funcions.empty}">
+                                <span>Lista Vacia</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section th:fragment="editarFuncion">
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                    <form method="POST"
+                          th:action="@{/funcion/guardar}"
+                          th:object="${funcion}"
+                          class="was-validated"
+                          enctype="multipart/form-data">
+                        <input type="hidden" name="idFuncion" th:field="*{idFuncion}"/>
+                        <section th:replace="~{funcion/fragmentos :: botonesEditar}"/>
+                        <div id=details>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h4>Actualizar</h4>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="mb-3">
+                                                    <label for="idPelicula">Pelicula</label>
+                                                    <select name="pelicula.idPelicula"
+                                                            class="form-select"
+                                                            aria-label="Default select example">
+                                                        <option th:each="pelicula : ${peliculas}" th:value="${pelicula.idPelicula}" th:text="${pelicula.titulo}"
+                                                                th:selected="${funcion.pelicula != null and funcion.pelicula.idPelicula == pelicula.idPelicula}">
+                                                        </option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label for="fecha">Fecha</label>
+                                                    <input type="text" class="form-control" name="fecha" th:field="*{fecha}" required="true"/>
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label for="hora">Hora</label>
+                                                    <input type="text" class="form-control" name="hora" th:field="*{hora}" required="true"/>
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label for="sala">Sala</label>
+                                                    <input type="text" class="form-control" name="sala" th:field="*{sala}" required="true"/>
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label for="activo">activo</label>
+                                                    <input class="form-check-input"
+                                                           type="checkbox"
+                                                           name="activo"
+                                                           th:field="*{activo}"
+                                                           id="activo"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <section th:fragment="botonesEditar">
+            <div class="container py-4 mb-4 bg-light">
+                <div class="row">
+                    <div class="col-md-4 d-grid">
+                        <a th:href="@{/funcion/listado}" class="btn btn-primary">
+                            <i class="fas fa-arrow-left"></i> Regresar
+                        </a>
+                    </div>
+                    <div class="col-md-4 d-grid" sec:authorize="hasRole('ROLE_ADMIN')">
+                        <a th:href="@{/funcion/eliminar/}+${funcion.idFuncion}"
+                           class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Eliminar
+                        </a>
+                    </div>
+                    <div class="col-md-4 d-grid">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-check"></i> Guardar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </body>
+</html>
